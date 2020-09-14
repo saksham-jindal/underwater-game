@@ -5,6 +5,7 @@ var fish1,fish2,fish3,fish4,fish5;
 var minepic;
 var go,restart,restartimg;
 var group1,group2,group3,group4,group5,minegroup;
+var score = 0;
 function preload(){
   bgpic = loadImage("images/bglong.png");
   fish1 = loadImage("images/blue.png");
@@ -27,6 +28,8 @@ function setup() {
   bg.x = bg.width/2;
   bg.velocityX = -3;
   shark = createSprite(100, 200, 100, 30);
+  gshark = createSprite(100, 200, 300, 100);
+  gshark.visible=false;
   shark.addImage(sharkpic);
   shark.scale = 0.5;
   shark.setCollider("rectangle",200,70,100,30);
@@ -55,23 +58,46 @@ function draw() {
     makefish4();
     makefish5();
     makemine();
-    
+    gshark.x = shark.x;
+    gshark.y = shark.y;
+    if (shark.y<50){
+      shark.y = 51;
+    }
+    if (shark.y>350){
+      shark.y = 349;
+    }
+    if(shark.y>=50&&shark.y<=height-50){
+     
+      if(keyDown("UP_ARROW")){
+        shark.y-=20;
+      }
+      if(keyDown("DOWN_ARROW")){
+        shark.y+=20;
+      }
+    }
+   
+    console.log(shark.y);
     if(shark.isTouching(group1)){
       group1.destroyEach();
+      score=score+100;
     }
     if(shark.isTouching(group2)){
       group2.destroyEach();
+      score=score+80;
     }
     if(shark.isTouching(group3)){
       group3.destroyEach();
+      score=score+90;
     }
     if(shark.isTouching(group4)){
       group4.destroyEach();
+      score=score+110;
     }
     if(shark.isTouching(group5)){
       group5.destroyEach();
+      score=score+120;
     }
-    if(shark.isTouching(minegroup)){
+    if(gshark.isTouching(minegroup)){
       gameState = "end";
     }
   } else{
@@ -80,15 +106,31 @@ function draw() {
     shark.y = 200;
     restart.visible = true;
     shark.setVelocity(0,0);
+    if(mousePressedOver(restart)){
+      reset ();
+    }
   }
  
   drawSprites();
+  textSize(30);
+  fill (255); 
+  stroke ("white");
+  text(score,1000,100);
+}
+function reset(){
+  gameState = "shark";
+  shark.addImage(sharkpic);
+  restart.visible = false;
+  shark.x = 100;
+  shark.y = 200;
+  score = 0;
 }
 function makefish1(){
   if (frameCount%152==0){
     fish = createSprite(1200,random(50,350),40,15);
     fish.addImage(fish1);
     fish.scale = 0.2;
+    fish.lifetime = 175;
     fish.velocityX=random(-8,-15);
     group1.add(fish);
   }
@@ -98,6 +140,7 @@ function makefish2(){
     fish = createSprite(1200,random(50,350),40,15);
     fish.addImage(fish2);
     fish.scale = 0.2;
+    fish.lifetime = 175;
     fish.velocityX=random(-6,-15);
     group2.add(fish);
   }
@@ -107,6 +150,7 @@ function makefish3(){
     fish = createSprite(1200,random(50,350),40,15);
     fish.addImage(fish3);
     fish.scale = 0.2;
+    fish.lifetime = 175;
     fish.velocityX=random(-5,-10);
     group3.add(fish);
   }
@@ -116,6 +160,7 @@ function makefish4(){
     fish = createSprite(1200,random(50,350),40,15);
     fish.addImage(fish4);
     fish.scale = 0.2;
+    fish.lifetime = 175;
     fish.velocityX=random(-7,-17);
     group4.add(fish);
   }
@@ -125,6 +170,7 @@ function makefish5(){
     fish = createSprite(1200,random(50,350),40,15);
     fish.addImage(fish5);
     fish.scale = 0.2;
+    fish.lifetime = 175;
     fish.velocityX=random(-8,-15);
     group5.add(fish);
   }
@@ -134,7 +180,7 @@ function makemine(){
     mine = createSprite(1200,random(50,350),40,15);
     mine.addImage(minepic);
     mine.scale = 0.2;
-    mine.debug = true;
+    mine.lifetime = 175;
     mine.setCollider("circle",0,0,150);
     mine.velocityX=random(-8,-15);
     minegroup.add(mine);
